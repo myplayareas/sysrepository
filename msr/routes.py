@@ -1,9 +1,9 @@
 from msr import app
 from flask import render_template, redirect, url_for, flash
-from msr.models import Item, User
+from msr.models import User, Repository
 from msr.forms import RegisterForm, LoginForm
 from msr import db
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route('/')
 @app.route('/home')
@@ -13,8 +13,8 @@ def home_page():
 @app.route('/msr')
 @login_required
 def msr_page():
-    items = Item.query.all()
-    return render_template('msr.html', items=items)
+    repositories = Repository.query.filter_by(owner=current_user.get_id()).all()
+    return render_template('msr.html', repositories=repositories)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
