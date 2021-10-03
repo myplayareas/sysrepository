@@ -23,7 +23,7 @@ Estrutura básica
 
 Dentro do diretório base existe o diretório msr referente a pasta da aplicação. 
 
-O script run.py é responsável por importar a aplicação e executá-la em um servidor web, por exemplo o [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface). Para esta aplicação de exemplo vamos usar o [werkzeug](https://www.palletsprojects.com/p/werkzeug)
+O script **run.py** é responsável por importar a aplicação e executá-la em um servidor web, por exemplo o [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface). Para esta aplicação de exemplo vamos usar o [werkzeug](https://www.palletsprojects.com/p/werkzeug)
 
 A pasta templates é responsável por abrigar as views em arquivos html. Além disso, também pode existir uma pasta static para abrigar os arquivos estáticos da aplicação, como por exemplo imagens, css, plugins, entre outros. 
 
@@ -61,7 +61,7 @@ Para esta aplicação existem as seguintes rotas básicas:
 4. /login para para fazer o controle de acesso da aplicação, esta página é representada pela view login.html para carregar o formulário de login e a view msr_page para carregar a view msr caso o usário seja autenticado com sucesso. 
 5. /logout para realizar o encerramento da sessão do usuário e redirecionar o usuário deslogado para a página inicial da aplicação
 
-Os seguintes módulos são usados para auxiliar o gerenciamento das chamadas das rotas e devolução de suas respostas:  render_template, redirect, url_for, flash, login_user, logout_user, login_required, além dos objetos da aplicação db, User, Item, RegisterForm e LoginForm. 
+Os seguintes módulos são usados para auxiliar o gerenciamento das chamadas das rotas e devolução de suas respostas:  render_template, redirect, url_for, flash, login_user, logout_user, login_required, além dos objetos da aplicação db, User, Repository, RegisterForm e LoginForm. 
 
 Seguem os links de cada um dos módulos e extensões usadas: [render_template](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), 
 [redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/#flask.url_for),
@@ -73,3 +73,17 @@ Para fazer a validação dos dados de entrada da aplicação são usados os segu
 
 Esses módulos usam [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField e PasswordField](https://wtforms.readthedocs.io/en/2.3.x/fields),
 [SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) e [Length, EqualTo, Email, DataRequired e ValidationError](https://wtforms.readthedocs.io/en/2.3.x/validators) para manipular os dados de entrada. 
+
+Para executar a aplicação é preciso instalar todos os módulos e extensões supracitadas. Além disso, é preciso setas as seguintes variáveis de ambiente: 
+
+Para o ambiente Posix:
+```bash
+export FLASK_APP=run.py
+export FLASK_ENV=development
+```
+Mais detalhes em [CLI Flask](https://flask.palletsprojects.com/en/2.0.x/cli/)
+
+Executar a aplicação via CLI: 
+```bash
+$flask run
+```
