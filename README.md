@@ -1,90 +1,66 @@
-# sysrepository
-MVP do SysRepository para análise de repositório de software
+Inside the base directory, there is the msr directory referring to the application folder.
 
-Estrutura básica
+The **run.py** script is responsible for importing the application and running it on a web server, for example [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface). For this example application, we will use [werkzeug](https://www.palletsprojects.com/p/werkzeug)
+
+The templates folder is responsible for holding views in html files. In addition, there may also be a static folder to house the application's static files, such as images, css, plugins, among others.
+
+Inside the msr application directory, there is the **__init__.py** file which is responsible for preparing the application configuration.
+
+In addition to the flask module, there are 3 other modules: [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com), [flask_bcrypt](https://flask-bcrypt.readthedocs.io) and [flask_login](https ://flask-login.readthedocs.io). They are flask extension modules responsible respectively for ORM (Obeject-relational mapping) access to the database via sqlalchemy, extension that provides hashing for the application via, and finally, extension that provides user session management for the flask application .
+
+Base modules: [SQLAlchemy](https://www.sqlalchemy.org) and [bcrypt](https://pypi.org/project/bcrypt)
+
+In general terms, the following elements and structures must be created to configure the application:
+
+- app - object representing the Flask application
+- bcrypt - object representing hashing actions on the Flask app
+- db - object that manages ORM database manipulation actions, via SQLAlchemy, on the Flask app application
+- login_manager - object that manages the user's session in the Flask app
+
+The application must have the database configuration informing where the database file is located.
+
+The login_manager object needs to inform which view represents the application's login screen.
+
+Finally, **__init__.py** also needs to import the application routes that load and manipulate the application views.
+
+The **msr.db** file represents the [SQLite](https://www.sqlite.org/index.html) file which stores the msr database information.
+
+The **dao.py** file represents the application models through User and Repository classes. More details on how model creation works using [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart)
+
+The dao.py file also loads data from the logged user through the load_user function which has the @login_manager.user_loader decorator of the login_manager module to manage the session of the user logged into the application.
+
+The **routes.py** file manages the application's routes. That is - in a simplified way, it is responsible for managing the application's requests and responses, loading and returning the application's views.
+
+For this application, there are the following basic routes:
+1. / or /home to load the application's main page represented by the home.html view
+2. /msr to load the page with the application's user repositories represented by the msr.html view
+3. /register to load the user registration form from the application represented by the register.html view
+4. /login to do application access control, this page is represented by the login.html view to load the login form and the msr_page view to load the msr view if the user is successfully authenticated.
+5. /logout to log out the user and redirect the logged-out user to the application's home page
+
+The following modules are used to help manage route calls and return their responses: render_template, redirect, url_for, flash, login_user, logout_user, login_required, in addition to the db, User, Repository, RegisterForm, and LoginForm application objects.
+
+Here are the links for each of the modules and extensions used: [render_template](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template),
+[redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/ #flask.url_for),
+[flash](https://flask.palletsprojects.com/en/2.0.x/patterns/flashing), [login_user, logout_user and login_required](https://flask-login.readthedocs.io/en/latest/# flask_login.login_user)
+
+Finally, the **forms.py** script manages the input and validation of the application's forms data. Basically, there are two classes to validate two forms in this application: the RegisterForm class that validates the registration data of new users and the LoginForm class that validates the application's login form data.
+
+To validate the application's input data, the following Flask modules and extensions are used: [flask_wtf](https://flask-wtf.readthedocs.io) and [wtforms](https://flask-wtf.readthedocs) io)
+
+These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField and PasswordField](https://wtforms.readthedocs.io/en /2.3.x/fields),
+[SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) and [Length, EqualTo, Email, DataRequired and ValidationError](https://wtforms.readthedocs. io/en/2.3.x/validators) to manipulate the input data.
+
+To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need arrows for the following environment variables:
+
+For the Posix environment:
 ```bash
-├── msr
-│   ├── __init__.py
-│   ├── forms.py
-│   ├── dao.py
-│   ├── msr.db
-│   ├── routes.py
-│   ├── static
-│   │   └── img
-│   │       └── repository.png
-│   └── templates
-│       ├── base.html
-│       ├── home.html
-│       ├── login.html
-│       ├── msr.html
-│       ├── register.html
-│       └── repository.html
-└── run.py
+export FLASH_APP=run.py
+export FLASH_ENV=development
 ```
+More details at [CLI Flask](https://flask.palletsprojects.com/en/2.0.x/cli/)
 
-Dentro do diretório base existe o diretório msr referente a pasta da aplicação. 
-
-O script **run.py** é responsável por importar a aplicação e executá-la em um servidor web, por exemplo o [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface). Para esta aplicação de exemplo vamos usar o [werkzeug](https://www.palletsprojects.com/p/werkzeug)
-
-A pasta templates é responsável por abrigar as views em arquivos html. Além disso, também pode existir uma pasta static para abrigar os arquivos estáticos da aplicação, como por exemplo imagens, css, plugins, entre outros. 
-
-Dentro do diretório da aplicação msr existe o arquivo **__init__.py** que é responsável por preparar a configuração da aplicação. 
-
-Além do módulo flask, existem mais 3 outros módulos: [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com), [flask_bcrypt](https://flask-bcrypt.readthedocs.io) e [flask_login](https://flask-login.readthedocs.io). Eles são módulos de extensão do flask responsáveis respectivamente por acesso ORM (Obeject-relational mapping) ao banco de dados via sqlalchemy, extensão que prover hashing para a aplicação via, e por fim, extensão que prover gerenciamento de sessão de usuário para a aplicação flask.
-
-Módulos base: [SQLAlchemy](https://www.sqlalchemy.org) e [bcrypt](https://pypi.org/project/bcrypt)
-
-Em linhas gerais é preciso criar os seguintes elementos e estruturas para configurar a aplicação: 
-
-- app - objeto que representa a aplicação Flask
-- bcrypt - objeto que representa ações de hashing sobre a aplicação Flask app
-- db - objeto que gerencia ações de manipulação ORM de banco de dados, via SQLAlchemy, sobre a aplicação Flask app
-- login_manager - objeto que gerencia a sessão do usuário na aplicação Flask app
-
-A aplicação precisa ter a configuração de banco de dados informando onde se encontra o arquivo do banco. 
-
-O objeto login_manager precisa informar qual a view que representa a tela de login da aplicação. 
-
-Por fim, o **__init__.py** também precisa importar as rotas da aplicação que carregam e manipulam as views da aplicação.
-
-O arquivo **msr.db** representa o arquivo [SQLite](https://www.sqlite.org/index.html) que armazena as informações do banco de dados msr.
-
-O arquivo **dao.py** representa os modelos da aplicação através das classes User e Repository. Mais detalhes sobre o funcionamento da criação de modelos usando o [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart)
-
-O arquivo dao.py também carrega dados do usuário logado através da função load_user que tem o decorator @login_manager.user_loader do módulo login_manager para gerenciar a sessão do usuário logado na aplicação.
-
-O arquivo **routes.py** gerencia as rotas da aplicação, ou seja - de forma simplificada, ele é responsável por gerenciar os requests e responses da aplicação carregando e devolvendo as views da aplicação. 
-
-Para esta aplicação existem as seguintes rotas básicas:
-1. / ou /home para carregar a página principal da aplicação representada pela view home.html
-2. /msr para carregar a página com os repositorios do usário da aplicação representada pela view msr.html
-3. /register para carregar o formulário de registro de usuário da aplicação representada pela view register.html
-4. /login para para fazer o controle de acesso da aplicação, esta página é representada pela view login.html para carregar o formulário de login e a view msr_page para carregar a view msr caso o usário seja autenticado com sucesso. 
-5. /logout para realizar o encerramento da sessão do usuário e redirecionar o usuário deslogado para a página inicial da aplicação
-
-Os seguintes módulos são usados para auxiliar o gerenciamento das chamadas das rotas e devolução de suas respostas:  render_template, redirect, url_for, flash, login_user, logout_user, login_required, além dos objetos da aplicação db, User, Repository, RegisterForm e LoginForm. 
-
-Seguem os links de cada um dos módulos e extensões usadas: [render_template](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), 
-[redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/#flask.url_for),
-[flash](https://flask.palletsprojects.com/en/2.0.x/patterns/flashing), [login_user, logout_user e login_required](https://flask-login.readthedocs.io/en/latest/#flask_login.login_user)
-
-Por fim, existe o script **forms.py** para gerenciar a entrada e validação dos dados dos formulários da aplicação. Basicamente existem duas classes para validar dois forms nessa aplicação: a classe RegisterForm que valida os dados de registro de novos usuários e a classe LoginForm que valida os dados do formulário de login da alicação. 
-
-Para fazer a validação dos dados de entrada da aplicação são usados os seguintes módulos e extensões do Flask: [flask_wtf](https://flask-wtf.readthedocs.io) e [wtforms](https://flask-wtf.readthedocs.io)
-
-Esses módulos usam [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField e PasswordField](https://wtforms.readthedocs.io/en/2.3.x/fields),
-[SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) e [Length, EqualTo, Email, DataRequired e ValidationError](https://wtforms.readthedocs.io/en/2.3.x/validators) para manipular os dados de entrada. 
-
-Para executar a aplicação é preciso instalar todos os módulos e extensões supracitadas. Além disso, é preciso setas as seguintes variáveis de ambiente: 
-
-Para o ambiente Posix:
-```bash
-export FLASK_APP=run.py
-export FLASK_ENV=development
-```
-Mais detalhes em [CLI Flask](https://flask.palletsprojects.com/en/2.0.x/cli/)
-
-Executar a aplicação via CLI: 
+Run the application via CLI:
 ```bash
 $flask run
 ```
