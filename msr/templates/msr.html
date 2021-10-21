@@ -57,7 +57,7 @@ return responsedata; //returning later
                     <td>{{ repository.analysis_date }}</td>
                     <td>{{ repository.analysed }}</td>
                     <td>
-                      <a href="{{ url_for('visualizar_analise_repositorio', id=repository.id) }}">Mais...</a>
+                      <a href="{{ url_for('visualizar_analise_repositorio', id=repository.id) }}">Details...</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -65,9 +65,7 @@ return responsedata; //returning later
     </table>
 
     <br>
-    <a href="{{ url_for('criar') }}">Cadastrar novo(s) repositório(s)</a> 
-    <br>
 
-    <input id="clickMe" type="button" value="Processar o(s) repositório(s) enfileirado(s)" onclick="loadResponseProcess()"/>
+    <input id="clickMe" type="button" value="Start analysis of repositories" onclick="loadResponseProcess()"/>
 
 {% endblock %}

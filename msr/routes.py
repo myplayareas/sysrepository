@@ -16,24 +16,33 @@ import logging
 from threading import Thread
 from msr import utilidades
 
+# Dictionary of tasks to aid asynchronous processing
 tasks = {}
 
-# List of producers
+# List of producers. It is created to accumulate the repositories that were not analyzed yet.
 list_of_producers = list()
 
 # Lista da strings de repositorios
 lista_de_repositorios = list()
 
+# Return a message informing that the repository processing was finished.
 link_processar_repositorios = ""
 
+# Queue of Repositories to be analysed
 work = Queue()
+# Auxiliar queue to aid control the queue of repositories
 finished = Queue()
 
+# A Thread to consume a repository from Queue of repositories
 consumer = None
 
+# Collection to manipulate users in data base
 usersCollection = Users()
+
+# Collection to manipulate repositories in data base
 repositoryColletion = Repositories()
 
+# Transform a request in a async request
 def flask_async(f):
     """
     This decorator transforms a sync route to asynchronous by running it in a background thread.
@@ -68,6 +77,7 @@ def flask_async(f):
 
     return wrapped
 
+# Fire a thread to enqueue a repository in the queue of repositories to be analyzed in the future
 def produzir_repositorios(lista_de_repositorios, work, finished):
     client = current_user.get_id()
     for each in lista_de_repositorios: 
@@ -75,6 +85,15 @@ def produzir_repositorios(lista_de_repositorios, work, finished):
         list_of_producers.append(thread)
         repository = Repository(name=utilidades.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
         repositoryColletion.insert_repository(repository)
+        
+    return url_for('processar_em_background')
+
+def produce_one_repository(each, work, finished):
+    client = current_user.get_id()
+    thread = utilidades.create_new_thread_default([client, each, work, finished])
+    list_of_producers.append(thread)
+    repository = Repository(name=utilidades.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
+    repositoryColletion.insert_repository(repository)
         
     return url_for('processar_em_background')
 
@@ -255,7 +274,15 @@ def repository_page():
         if not exist_repository_in_user(name, link, list_user_repositories):
             repository = Repository(name=name, link=link, creation_date=datetime.datetime.now(), 
                                             analysis_date=None, analysed=0, owner=current_user.get_id())
-            repositoryColletion.insert_repository(repository)
+            try:
+                # Produtor que enfileira o repositorio na lista de repositorios e salva o repositorio no banco de dados
+                link_processar_repositorios = produce_one_repository(link, work, finished)
+            except Exception as e:
+                error_processing_repository = "Erro na produção dos repositorios" + str(e)
+                if error_processing_repository is not None:
+                    flash(error_processing_repository, category='danger')
+                    return redirect(url_for("msr_page"))
+
             flash(f'Repository {repository.name} created with success!', category='success')
             return redirect(url_for('msr_page'))
 
