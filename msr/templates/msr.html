@@ -5,16 +5,33 @@
 
 {% block content %}
 
-<script type=text/javascript>
-    $(function() {
-      $('a#processar').bind('click', function() {
-        $.getJSON('/processar', function(data) {
-          $("#TaskIdProcessar").text(data.TaskId);
-        });
-        return false;
-      });
-    });
-</script>
+<script type="text/javascript">
+function loadResponseProcess()
+{
+var responsedata;
+$.ajax(
+{
+    url: '/processar',
+    async   : true,
+    type    : "GET",
+    dataType: 'json',
+    error   : function(data)
+    {
+        console.log('error occured when trying to load processing repositories');
+    },
+    success : function(data) 
+    {
+        console.log('Processing repositories from queue loaded successfully.');
+
+        //return data;    //this line ruins all, change this to below line
+        responsedata=data // asssigning first
+    }
+});
+
+return responsedata; //returning later
+}
+</script> 
+
 
       <table class="table table-hover table">
         <thead>
@@ -50,6 +67,7 @@
     <br>
     <a href="{{ url_for('criar') }}">Cadastrar novo(s) repositório(s)</a> 
     <br>
-    <a href='#' id='processar'>Processar o(s) repositório(s) enfileirado(s)</a> <span id='TaskIdProcessar'>?</span>
+
+    <input id="clickMe" type="button" value="Processar o(s) repositório(s) enfileirado(s)" onclick="loadResponseProcess()"/>
 
 {% endblock %}
