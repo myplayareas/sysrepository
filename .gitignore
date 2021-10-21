@@ -5,3 +5,4 @@ msr/__pycache__/forms.cpython-36.pyc
 msr/__pycache__/models.cpython-36.pyc
 msr/__pycache__/routes.cpython-36.pyc
 .DS_Store
+msr/__pycache__/dao.cpython-36.pyc

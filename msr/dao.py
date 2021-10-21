@@ -30,8 +30,44 @@ class Repository(db.Model):
     name = db.Column(db.String(length=30), nullable=False, unique=True)
     link = db.Column(db.String(length=1024), nullable=False, unique=True)
     creation_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    analysis_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    analysed = db.Column(db.Integer(), nullable=True)
+    analysis_date = db.Column(db.DateTime, nullable=True, default=None)
+    analysed = db.Column(db.Integer(), nullable=True, default=0)
     owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    
     def __repr__(self):
         return f'Repository {self.name}'
+
+class Users:
+    def insert_user(self, user):
+        db.session.add(user)
+        db.session.commit()
+
+    def query_user_by_username(self, p_username):
+        user = User.query.filter_by(username=p_username).first()
+        return user
+    def query_user_by_id(self, p_id):
+        user = User.query.filter_by(id=p_id).first()
+        return user
+    
+    def list_all_users(self):
+        return User.query.all()
+
+class Repositories:
+    def insert_repository(self, repository):
+        db.session.add(repository)
+        db.session.commit()
+
+    def query_repository_by_name(self, p_name):
+        repository = Repository.query.filter_by(name=p_name).first()
+        return repository
+
+    def query_repository_by_id(self, p_id):
+        repository = Repository.query.filter_by(id=p_id).first()
+        return repository
+    
+    def list_all_repositories(self):
+        return Repository.query.all()
+
+    def query_repositories_by_user_id(self, user_id):
+        list_repositories = Repository.query.filter_by(owner=user_id).all()
+        return list_repositories

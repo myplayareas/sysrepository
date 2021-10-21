@@ -6,7 +6,7 @@ Estrutura básica
 ├── msr
 │   ├── __init__.py
 │   ├── forms.py
-│   ├── models.py
+│   ├── dao.py
 │   ├── msr.db
 │   ├── routes.py
 │   ├── static
@@ -17,7 +17,8 @@ Estrutura básica
 │       ├── home.html
 │       ├── login.html
 │       ├── msr.html
-│       └── register.html
+│       ├── register.html
+│       └── repository.html
 └── run.py
 ```
 
@@ -48,9 +49,9 @@ Por fim, o **__init__.py** também precisa importar as rotas da aplicação que 
 
 O arquivo **msr.db** representa o arquivo [SQLite](https://www.sqlite.org/index.html) que armazena as informações do banco de dados msr.
 
-O arquivo **models.py** representa os modelos da aplicação através das classes User e Repository. Mais detalhes sobre o funcionamento da criação de modelos usando o [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart)
+O arquivo **dao.py** representa os modelos da aplicação através das classes User e Repository. Mais detalhes sobre o funcionamento da criação de modelos usando o [flask_sqlalchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart)
 
-O arquivo models.py também carrega dados do usuário logado através da função load_user que tem o decorator @login_manager.user_loader do módulo login_manager para gerenciar a sessão do usuário logado na aplicação.
+O arquivo dao.py também carrega dados do usuário logado através da função load_user que tem o decorator @login_manager.user_loader do módulo login_manager para gerenciar a sessão do usuário logado na aplicação.
 
 O arquivo **routes.py** gerencia as rotas da aplicação, ou seja - de forma simplificada, ele é responsável por gerenciar os requests e responses da aplicação carregando e devolvendo as views da aplicação. 
 

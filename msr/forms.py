@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
-from msr.models import User
-
+from msr.dao import User
 
 class RegisterForm(FlaskForm):
     def validate_username(self, username_to_check):
@@ -26,3 +25,8 @@ class LoginForm(FlaskForm):
     username = StringField(label='User Name:', validators=[DataRequired()])
     password = PasswordField(label='Password:', validators=[DataRequired()])
     submit = SubmitField(label='Sign in')
+
+class RepositoryForm(FlaskForm):
+    name = StringField(label='Repository Name:', validators=[Length(min=2, max=30), DataRequired()])
+    link = StringField(label='Repository Link:', validators=[Length(min=2, max=500), DataRequired()])
+    submit = SubmitField(label='New')
