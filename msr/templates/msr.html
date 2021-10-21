@@ -4,6 +4,18 @@
 {% endblock %}
 
 {% block content %}
+
+<script type=text/javascript>
+    $(function() {
+      $('a#processar').bind('click', function() {
+        $.getJSON('/processar', function(data) {
+          $("#TaskIdProcessar").text(data.TaskId);
+        });
+        return false;
+      });
+    });
+</script>
+
       <table class="table table-hover table">
         <thead>
             <tr>
@@ -28,10 +40,16 @@
                     <td>{{ repository.analysis_date }}</td>
                     <td>{{ repository.analysed }}</td>
                     <td>
-                        <button class="btn btn-outline btn-info">More Info</button>
+                      <a href="{{ url_for('visualizar_analise_repositorio', id=repository.id) }}">Mais...</a>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <br>
+    <a href="{{ url_for('criar') }}">Cadastrar novo(s) repositório(s)</a> 
+    <br>
+    <a href='#' id='processar'>Processar o(s) repositório(s) enfileirado(s)</a> <span id='TaskIdProcessar'>?</span>
+
 {% endblock %}
