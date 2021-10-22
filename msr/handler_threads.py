@@ -9,7 +9,7 @@ from flask import current_app
 import os
 import random
 from msr.dao import Repositories
-from msr import manipula_arquivos
+from msr import handler_files
 from queue import Queue
 
 repositoryCollection = Repositories()
@@ -32,7 +32,7 @@ def atualizar_repositorio(app, user_id, repository):
 def salvar_dicionario_em_arquivo_json(app, name, user_id, my_dictionary, path_repositories):
     try:
         with app.app_context():
-            manipula_arquivos.save_dictionary_in_json_file(name, user_id, my_dictionary, path_repositories)
+            handler_files.save_dictionary_in_json_file(name, user_id, my_dictionary, path_repositories)
     except Exception as e:
         display(f'Error during try to save the dictionary {name} as a json file!: {e}')
     

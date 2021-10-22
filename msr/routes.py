@@ -14,7 +14,7 @@ import threading
 import multiprocessing
 import logging
 from threading import Thread
-from msr import utilidades
+from msr import handler_threads
 
 # Dictionary of tasks to aid asynchronous processing
 tasks = {}
@@ -81,18 +81,18 @@ def flask_async(f):
 def produzir_repositorios(lista_de_repositorios, work, finished):
     client = current_user.get_id()
     for each in lista_de_repositorios: 
-        thread = utilidades.create_new_thread_default([client, each, work, finished])
+        thread = handler_threads.create_new_thread_default([client, each, work, finished])
         list_of_producers.append(thread)
-        repository = Repository(name=utilidades.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
+        repository = Repository(name=handler_threads.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
         repositoryColletion.insert_repository(repository)
         
     return url_for('processar_em_background')
 
 def produce_one_repository(each, work, finished):
     client = current_user.get_id()
-    thread = utilidades.create_new_thread_default([client, each, work, finished])
+    thread = handler_threads.create_new_thread_default([client, each, work, finished])
     list_of_producers.append(thread)
-    repository = Repository(name=utilidades.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
+    repository = Repository(name=handler_threads.pega_nome_repositorio(each), link=each, owner=current_user.get_id())
     repositoryColletion.insert_repository(repository)
         
     return url_for('processar_em_background')
@@ -101,7 +101,7 @@ def repositorios_ja_existem(lista_de_repositorios, user_id):
     lista_de_repositorios_ja_existem = list()
     try: 
         for each in lista_de_repositorios:
-            resultado = repositoryColletion.query_repositories_by_name_and_user_id(utilidades.pega_nome_repositorio(each), user_id)
+            resultado = repositoryColletion.query_repositories_by_name_and_user_id(handler_threads.pega_nome_repositorio(each), user_id)
             if len(resultado) > 0:
                 lista_de_repositorios_ja_existem.append( resultado )
     except Exception as e:
@@ -158,7 +158,7 @@ def criar():
 @flask_async
 def processar_em_background():
     # Create the thread consumer repositories stored in the Queue
-    consumer = Thread(target=utilidades.perform_work, args=[current_app._get_current_object(), work, finished], daemon=True)
+    consumer = Thread(target=handler_threads.perform_work, args=[current_app._get_current_object(), work, finished], daemon=True)
 
     print('Start the consumer')
     # Start the consumer of queue of requests
@@ -167,12 +167,12 @@ def processar_em_background():
     if len(list_of_producers) > 0:
         for each in list_of_producers:
             each.join()
-            utilidades.display('Producer ' + each.getName() + ' has finished with success!')
+            handler_threads.display('Producer ' + each.getName() + ' has finished with success!')
         list_of_producers.clear()
 
     consumer.join()
-    utilidades.display('Consumer has finished')
-    utilidades.display('Finished the main process.')
+    handler_threads.display('Consumer has finished')
+    handler_threads.display('Finished the main process.')
 
     return '<p> processamento dos repositórios foi concluído com sucesso!'
 
@@ -185,7 +185,7 @@ def utility_processor():
             lista_de_status = ['Erro','Registrado', 'Analisado']
             valor = lista_de_status[status]
         except Exception as e:
-            utilidades.display('Erro de status: valor ' + valor + ' - status:  ' + str(status) + ' - ' + str(e))
+            handler_threads.display('Erro de status: valor ' + valor + ' - status:  ' + str(status) + ' - ' + str(e))
         return valor
     return dict(status_repositorio=status_repositorio)
     

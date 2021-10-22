@@ -39,8 +39,11 @@ class Repository(db.Model):
 
 class Users:
     def insert_user(self, user):
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            print(f'Error during insert user - {e}')
 
     def query_user_by_username(self, p_username):
         user = User.query.filter_by(username=p_username).first()
