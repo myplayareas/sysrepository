@@ -27,8 +27,8 @@ class User(db.Model, UserMixin):
 
 class Repository(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(length=30), nullable=False, unique=True)
-    link = db.Column(db.String(length=1024), nullable=False, unique=True)
+    name = db.Column(db.String(length=30), nullable=False, unique=False)
+    link = db.Column(db.String(length=1024), nullable=False, unique=False)
     creation_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     analysis_date = db.Column(db.DateTime, nullable=True, default=None)
     analysed = db.Column(db.Integer(), nullable=True, default=0)
@@ -39,8 +39,11 @@ class Repository(db.Model):
 
 class Users:
     def insert_user(self, user):
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            print(f'Error during insert user - {e}')
 
     def query_user_by_username(self, p_username):
         user = User.query.filter_by(username=p_username).first()
@@ -54,8 +57,11 @@ class Users:
 
 class Repositories:
     def insert_repository(self, repository):
-        db.session.add(repository)
-        db.session.commit()
+        try:
+            db.session.add(repository)
+            db.session.commit()
+        except Exception as e:
+            print(f'Error during insert repository - {e}')
 
     def query_repository_by_name(self, p_name):
         repository = Repository.query.filter_by(name=p_name).first()
@@ -70,4 +76,21 @@ class Repositories:
 
     def query_repositories_by_user_id(self, user_id):
         list_repositories = Repository.query.filter_by(owner=user_id).all()
+        return list_repositories
+
+    def update_repository_by_name(self, name, user_id, analysed):
+        analysis_date = datetime.now()
+        repository = Repository.query.filter_by(name=name, owner=user_id).first()
+        repository.analysis_date = analysis_date
+        repository.analysed = analysed
+        db.session.add(repository)
+        db.session.commit()
+
+    def query_repositories_by_name_and_user_id(self, repository_name, user_id):
+        list_repositories_by_user_id = Repository.query.filter_by(owner=user_id).all()
+        list_repositories = []
+        for each in list_repositories_by_user_id:
+            if each.name == repository_name:
+                list_repositories.append(each)
+
         return list_repositories

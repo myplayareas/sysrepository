@@ -4,6 +4,35 @@
 {% endblock %}
 
 {% block content %}
+
+<script type="text/javascript">
+function loadResponseProcess()
+{
+var responsedata;
+$.ajax(
+{
+    url: '/processar',
+    async   : true,
+    type    : "GET",
+    dataType: 'json',
+    error   : function(data)
+    {
+        console.log('error occured when trying to load processing repositories');
+    },
+    success : function(data) 
+    {
+        console.log('Processing repositories from queue loaded successfully.');
+
+        //return data;    //this line ruins all, change this to below line
+        responsedata=data // asssigning first
+    }
+});
+
+return responsedata; //returning later
+}
+</script> 
+
+
       <table class="table table-hover table">
         <thead>
             <tr>
@@ -28,10 +57,15 @@
                     <td>{{ repository.analysis_date }}</td>
                     <td>{{ repository.analysed }}</td>
                     <td>
-                        <button class="btn btn-outline btn-info">More Info</button>
+                      <a href="{{ url_for('visualizar_analise_repositorio', id=repository.id) }}">Details...</a>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <br>
+
+    <input id="clickMe" type="button" value="Start analysis of repositories" onclick="loadResponseProcess()"/>
+
 {% endblock %}
