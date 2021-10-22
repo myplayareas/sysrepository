@@ -75,9 +75,9 @@ class Repositories:
         list_repositories = Repository.query.filter_by(owner=user_id).all()
         return list_repositories
 
-    def update_repository_by_name(self, name, analysed):
+    def update_repository_by_name(self, name, user_id, analysed):
         analysis_date = datetime.now()
-        repository = Repository.query.filter_by(name=name).first()
+        repository = Repository.query.filter_by(name=name, owner=user_id).first()
         repository.analysis_date = analysis_date
         repository.analysed = analysed
         db.session.add(repository)

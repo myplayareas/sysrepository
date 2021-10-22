@@ -22,10 +22,10 @@ list_of_producers_dictionaries = list()
 work_of_dictionaries = Queue()
 finished_of_dictionaries = Queue()
 
-def atualizar_repositorio(app, repository):
+def atualizar_repositorio(app, user_id, repository):
     try:
         with app.app_context():
-            repositoryCollection.update_repository_by_name( pega_nome_repositorio(repository), 2)
+            repositoryCollection.update_repository_by_name( pega_nome_repositorio(repository), user_id, 2)
     except Exception as e:
         display(f'Error during access data base to update in {repository} error: {e}')
 
@@ -68,8 +68,8 @@ def create_new_thread_save_dictionary(app, client, name, my_dictionary):
     thread.join()
     display('Thread ' + thread.getName() + ' save ' + name + 'in json file')
 
-def create_new_thread_banco(app, repository):
-    thread = Thread(target=atualizar_repositorio, args=[app, repository], daemon=True)
+def create_new_thread_banco(app, user_id, repository):
+    thread = Thread(target=atualizar_repositorio, args=[app, user_id, repository], daemon=True)
     display('It was created a new Thread ' + thread.getName() + ' to access database to update repository ' + repository)
     thread.start()
     thread.join()
@@ -148,7 +148,7 @@ def perform_work(app, work, finished):
             display(f'Consuming {counter}: {v}')
             print(f'Cloning repository {v[2]} from client {str(v[0])}')
             create_new_thread_analyse_commits(v[0],v[2])
-            create_new_thread_banco(app, v[2])
+            create_new_thread_banco(app, v[0], v[2])
             processar_fila_dedicionarios_em_background(app, work_of_dictionaries, finished_of_dictionaries)
             counter += 1
         else:
