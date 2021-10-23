@@ -1,4 +1,57 @@
+I chose to choose the Flask microframework because it is a simpler framework and requires a smaller set of dependencies and libraries to work with the http environment for request and response.
+
+Flask uses the MTV (Model Template View) standard and with that, our application will follow the conventions recommended by Flask.
+
 Inside the base directory, there is the msr directory referring to the application folder.
+
+Here is a base application structure with its most important directories and files:
+
+```bash
+.
+├── run.py
+├── setvariables.sh
+├── msr
+│   ├── __init__.py
+│   ├── routes.py
+│   ├── forms.py
+│   ├── dao.py
+│   ├── handler_threads.py
+│   ├── handler_files.py
+│   ├── msr.db
+│   ├── static
+│   │   ├── img
+│   │   │   └── repository.png
+│   │   ├── jsonview.bundle.css
+│   │   ├── jsonview.bundle.js
+│   │   ├── repositories
+│   │   │   ├── user 1
+│   │   │   │   ├── ...
+│   │   │   └── user n
+│   │   └── uploads
+│   └── templates
+│       ├── base.html
+│       ├── home.html
+│       ├── authenticate
+│       │   ├── register.html
+│       │   └── login.html
+│       ├── user
+│       │   ├── profile.html
+│       │   └── msr.html (dashboard.html)
+│       ├── repository
+│       │   ├── criar.html
+│       │   ├── repository.html
+│       │   └── analisado.html 
+│	├── ...
+├── docs
+│   ├── diagrams
+│   │   ├── out
+│   │   │       └── ...
+│   │   └── src
+│   │       ├── ...
+│   └── ui
+│       ├── ...
+└── ...
+```
 
 The **run.py** script is responsible for importing the application and running it on a web server, for example [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface). For this example application, we will use [werkzeug](https://www.palletsprojects.com/p/werkzeug)
 
@@ -41,15 +94,15 @@ For this application, there are the following basic routes:
 The following modules are used to help manage route calls and return their responses: render_template, redirect, url_for, flash, login_user, logout_user, login_required, in addition to the db, User, Repository, RegisterForm, and LoginForm application objects.
 
 Here are the links for each of the modules and extensions used: [render_template](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template),
-[redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/ #flask.url_for),
-[flash](https://flask.palletsprojects.com/en/2.0.x/patterns/flashing), [login_user, logout_user and login_required](https://flask-login.readthedocs.io/en/latest/# flask_login.login_user)
+[redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/#flask.url_for),
+[flash](https://flask.palletsprojects.com/en/2.0.x/patterns/flashing), [login_user, logout_user and login_required](https://flask-login.readthedocs.io/en/latest/#flask_login.login_user)
 
 Finally, the **forms.py** script manages the input and validation of the application's forms data. Basically, there are two classes to validate two forms in this application: the RegisterForm class that validates the registration data of new users and the LoginForm class that validates the application's login form data.
 
-To validate the application's input data, the following Flask modules and extensions are used: [flask_wtf](https://flask-wtf.readthedocs.io) and [wtforms](https://flask-wtf.readthedocs) io)
+To validate the application's input data, the following Flask modules and extensions are used: [flask_wtf](https://flask-wtf.readthedocs.io) and [wtforms](https://flask-wtf.readthedocs.io)
 
-These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField and PasswordField](https://wtforms.readthedocs.io/en /2.3.x/fields),
-[SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) and [Length, EqualTo, Email, DataRequired and ValidationError](https://wtforms.readthedocs. io/en/2.3.x/validators) to manipulate the input data.
+These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField and PasswordField](https://wtforms.readthedocs.io/en/2.3.x/fields),
+[SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) and [Length, EqualTo, Email, DataRequired and ValidationError](https://wtforms.readthedocs.io/en/2.3.x/validators) to manipulate the input data.
 
 To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need arrows for the following environment variables:
 
@@ -64,3 +117,5 @@ Run the application via CLI:
 ```bash
 $flask run
 ```
+
+More details... [wiki](https://github.com/myplayareas/sysrepository/wiki)
