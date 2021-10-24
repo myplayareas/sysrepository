@@ -106,10 +106,10 @@ The **forms.py** script manages the input and validation of the application's fo
 
 To validate the application's input data, the following Flask modules and extensions are used: [flask_wtf](https://flask-wtf.readthedocs.io) and [wtforms](https://flask-wtf.readthedocs.io)
 
-Finally, the **handler_threads.py** script manages multiprocessing tasks.
-
 These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField and PasswordField](https://wtforms.readthedocs.io/en/2.3.x/fields),
 [SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) and [Length, EqualTo, Email, DataRequired and ValidationError](https://wtforms.readthedocs.io/en/2.3.x/validators) to manipulate the input data.
+
+Finally, the **handler_threads.py** script manages multiprocessing tasks.
 
 To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need arrows for the following environment variables:
 
