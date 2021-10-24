@@ -182,14 +182,14 @@ def utility_processor():
         valor = ''
         try:
             lista_de_status = list()
-            lista_de_status = ['Erro','Registrado', 'Analisado']
+            lista_de_status = ['Registered', 'Processing', 'Analysed']
             valor = lista_de_status[status]
         except Exception as e:
             handler_threads.display('Erro de status: valor ' + valor + ' - status:  ' + str(status) + ' - ' + str(e))
         return valor
     return dict(status_repositorio=status_repositorio)
     
-@app.route("/repositorio/<int:id>/analisado", methods=["GET"])
+@app.route("/repository/<int:id>/analysed", methods=["GET"])
 @login_required
 def visualizar_analise_repositorio(id):
     repositorio = repositoryColletion.query_repository_by_id(id)
