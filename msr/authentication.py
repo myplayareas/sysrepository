@@ -8,14 +8,14 @@ from msr.main import work, usersCollection
 @app.route('/')
 @app.route('/home')
 def home_page():
-    return render_template('home.html')
+    return render_template('authenticate/home.html')
 
 @app.route('/msr')
 @login_required
 def msr_page():
     repositories = Repository.query.filter_by(owner=current_user.get_id()).all()
     print(f'Fila de repositórios: {work.queue}')
-    return render_template('msr.html', repositories=repositories)
+    return render_template('user/msr.html', repositories=repositories)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
@@ -30,7 +30,7 @@ def register_page():
         for err_msg in form.errors.values():
             flash(f'There was an error with creating a user: {err_msg}', category='danger')
 
-    return render_template('register.html', form=form)
+    return render_template('authenticate/register.html', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
@@ -44,7 +44,7 @@ def login_page():
         else:
             flash('Username and password are not match! Please try again', category='danger')
 
-    return render_template('login.html', form=form)
+    return render_template('authenticate/login.html', form=form)
 
 @app.route('/logout')
 def logout_page():

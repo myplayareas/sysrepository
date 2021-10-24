@@ -121,7 +121,7 @@ def criar():
         if len(cadeia_de_repositorios) == 0:
             error = "List of repositories is required."
             flash(error, 'danger')
-            return render_template("criar.html")
+            return render_template("repository/criar.html")
         else:
             lista_de_repositorios = cadeia_de_repositorios.split(",")
             testa_repositorios = repositorios_ja_existem(lista_de_repositorios, current_user.get_id() )
@@ -130,11 +130,11 @@ def criar():
         if len(testa_repositorios) > 0: 
             lista = list()
             for each in testa_repositorios:
-                lista.append(each.name)
+                lista.append(each[0].name)
 
             error = f'O(s) repositorio(s) {lista} já foi(forão) cadastrado(s) no banco!'
             flash(error, category='danger')
-            return render_template("criar.html")
+            return render_template("repository/criar.html")
 
         try:
             # Produtor que enfileira o repositorio na lista de repositorios
@@ -151,7 +151,7 @@ def criar():
         flash(message, 'success')
         return redirect(url_for("msr_page"))
 
-    return render_template('criar.html')
+    return render_template('repository/criar.html')
 
 @app.route("/processar")
 @login_required
@@ -202,7 +202,7 @@ def visualizar_analise_repositorio(id):
     relative_path = 'repositories' + '/' + str(current_user.get_id()) + '/' + name + '.json'
     relative_path_file_name = url_for('static', filename=relative_path)
 
-    return render_template("analisado.html", my_link=link, my_name=name, my_creation_date=creation_date,
+    return render_template("repository/analisado.html", my_link=link, my_name=name, my_creation_date=creation_date,
                                 my_analysis_date=analysis_date, my_status=status,
                                 my_relative_path_file_name=relative_path_file_name)
 
@@ -245,4 +245,4 @@ def repository_page():
         for err_msg in form.errors.values():
             flash(f'There was an error with new repository: {err_msg}', category='danger')
 
-    return render_template('repository.html', form=form)  
+    return render_template('repository/repository.html', form=form)  
