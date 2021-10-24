@@ -12,7 +12,8 @@ Here is a base application structure with its most important directories and fil
 ├── setvariables.sh
 ├── msr
 │   ├── __init__.py
-│   ├── routes.py
+│   ├── main.py
+│   ├── authentication.py
 │   ├── forms.py
 │   ├── dao.py
 │   ├── handler_threads.py
@@ -30,8 +31,8 @@ Here is a base application structure with its most important directories and fil
 │   │   └── uploads
 │   └── templates
 │       ├── base.html
-│       ├── home.html
 │       ├── authenticate
+│       │   ├── home.html
 │       │   ├── register.html
 │       │   └── login.html
 │       ├── user
@@ -82,7 +83,7 @@ The **dao.py** file represents the application models through User and Repositor
 
 The dao.py file also loads data from the logged user through the load_user function which has the @login_manager.user_loader decorator of the login_manager module to manage the session of the user logged into the application.
 
-The **routes.py** file manages the application's routes. That is - in a simplified way, it is responsible for managing the application's requests and responses, loading and returning the application's views.
+The **authentication.py** file manages the basic application's routes. That is - in a simplified way, it is responsible for managing the application's requests and responses, loading and returning the application's views.
 
 For this application, there are the following basic routes:
 1. / or /home to load the application's main page represented by the home.html view
@@ -91,15 +92,19 @@ For this application, there are the following basic routes:
 4. /login to do application access control, this page is represented by the login.html view to load the login form and the msr_page view to load the msr view if the user is successfully authenticated.
 5. /logout to log out the user and redirect the logged-out user to the application's home page
 
+The **main.py** file manages repositorry main tasks.
+
 The following modules are used to help manage route calls and return their responses: render_template, redirect, url_for, flash, login_user, logout_user, login_required, in addition to the db, User, Repository, RegisterForm, and LoginForm application objects.
 
 Here are the links for each of the modules and extensions used: [render_template](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template),
 [redirect](https://flask.palletsprojects.com/en/2.0.x/api/#flask.render_template), [url_for](https://flask.palletsprojects.com/en/2.0.x/api/#flask.url_for),
 [flash](https://flask.palletsprojects.com/en/2.0.x/patterns/flashing), [login_user, logout_user and login_required](https://flask-login.readthedocs.io/en/latest/#flask_login.login_user)
 
-Finally, the **forms.py** script manages the input and validation of the application's forms data. Basically, there are two classes to validate two forms in this application: the RegisterForm class that validates the registration data of new users and the LoginForm class that validates the application's login form data.
+The **forms.py** script manages the input and validation of the application's forms data. Basically, there are two classes to validate two forms in this application: the RegisterForm class that validates the registration data of new users and the LoginForm class that validates the application's login form data. You can put here other forms as you need.
 
 To validate the application's input data, the following Flask modules and extensions are used: [flask_wtf](https://flask-wtf.readthedocs.io) and [wtforms](https://flask-wtf.readthedocs.io)
+
+Finally, the **handler_threads.py** script manages multiprocessing tasks.
 
 These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickstart/#validating-forms), [StringField and PasswordField](https://wtforms.readthedocs.io/en/2.3.x/fields),
 [SubmitField](https://wtforms.readthedocs.io/en/2.3.x/fields/#wtforms.fields.SubmitField) and [Length, EqualTo, Email, DataRequired and ValidationError](https://wtforms.readthedocs.io/en/2.3.x/validators) to manipulate the input data.
