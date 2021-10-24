@@ -1,3 +1,5 @@
+## Building the web application
+
 I chose to choose the Flask microframework because it is a simpler framework and requires a smaller set of dependencies and libraries to work with the http environment for request and response.
 
 Flask uses the MTV (Model Template View) standard and with that, our application will follow the conventions recommended by Flask.
