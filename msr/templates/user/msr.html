@@ -53,12 +53,20 @@ return responsedata; //returning later
                     <td>{{ repository.id }}</td>
                     <td>{{ repository.name }}</td>
                     <td>{{ repository.link }}</td>
-                    <td>{{ repository.creation_date }}</td>
-                    <td>{{ repository.analysis_date }}</td>
-                    <td>{{ repository.analysed }}</td>
+                    <td>{{ repository.creation_date.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    {% if repository.analysis_date is not none: %}
+                    <td>{{ repository.analysis_date.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif%}
+                    <td>{{ status_repositorio(repository.analysed) }}</td>
+                    {% if repository.analysed == 2: %}
                     <td>
                       <a href="{{ url_for('visualizar_analise_repositorio', id=repository.id) }}">Details...</a>
                     </td>
+                    {% else %}
+                    <td>Not Available Yet</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>

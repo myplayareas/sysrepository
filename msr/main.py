@@ -1,9 +1,9 @@
 from msr import app
 from flask import render_template, redirect, url_for, flash
 from msr.dao import User, Users, Repository, Repositories
-from msr.forms import RegisterForm, LoginForm, RepositoryForm
+from msr.forms import  RepositoryForm
 from msr import db
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_required, current_user
 import datetime
 from queue import Queue
 from functools import wraps
@@ -121,7 +121,7 @@ def criar():
         if len(cadeia_de_repositorios) == 0:
             error = "List of repositories is required."
             flash(error, 'danger')
-            return render_template("criar.html")
+            return render_template("repository/criar.html")
         else:
             lista_de_repositorios = cadeia_de_repositorios.split(",")
             testa_repositorios = repositorios_ja_existem(lista_de_repositorios, current_user.get_id() )
@@ -130,11 +130,11 @@ def criar():
         if len(testa_repositorios) > 0: 
             lista = list()
             for each in testa_repositorios:
-                lista.append(each.name)
+                lista.append(each[0].name)
 
             error = f'O(s) repositorio(s) {lista} já foi(forão) cadastrado(s) no banco!'
             flash(error, category='danger')
-            return render_template("criar.html")
+            return render_template("repository/criar.html")
 
         try:
             # Produtor que enfileira o repositorio na lista de repositorios
@@ -151,7 +151,7 @@ def criar():
         flash(message, 'success')
         return redirect(url_for("msr_page"))
 
-    return render_template('criar.html')
+    return render_template('repository/criar.html')
 
 @app.route("/processar")
 @login_required
@@ -182,14 +182,14 @@ def utility_processor():
         valor = ''
         try:
             lista_de_status = list()
-            lista_de_status = ['Erro','Registrado', 'Analisado']
+            lista_de_status = ['Registered', 'Processing', 'Analysed']
             valor = lista_de_status[status]
         except Exception as e:
             handler_threads.display('Erro de status: valor ' + valor + ' - status:  ' + str(status) + ' - ' + str(e))
         return valor
     return dict(status_repositorio=status_repositorio)
     
-@app.route("/repositorio/<int:id>/analisado", methods=["GET"])
+@app.route("/repository/<int:id>/analysed", methods=["GET"])
 @login_required
 def visualizar_analise_repositorio(id):
     repositorio = repositoryColletion.query_repository_by_id(id)
@@ -202,56 +202,9 @@ def visualizar_analise_repositorio(id):
     relative_path = 'repositories' + '/' + str(current_user.get_id()) + '/' + name + '.json'
     relative_path_file_name = url_for('static', filename=relative_path)
 
-    return render_template("analisado.html", my_link=link, my_name=name, my_creation_date=creation_date,
+    return render_template("repository/analisado.html", my_link=link, my_name=name, my_creation_date=creation_date,
                                 my_analysis_date=analysis_date, my_status=status,
                                 my_relative_path_file_name=relative_path_file_name)
-
-@app.route('/')
-@app.route('/home')
-def home_page():
-    return render_template('home.html')
-
-@app.route('/msr')
-@login_required
-def msr_page():
-    repositories = Repository.query.filter_by(owner=current_user.get_id()).all()
-    print(f'Fila de repositórios: {work.queue}')
-    return render_template('msr.html', repositories=repositories)
-
-@app.route('/register', methods=['GET', 'POST'])
-def register_page():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user_to_create = User(username=form.username.data, email_address=form.email_address.data, password=form.password1.data)
-        usersCollection.insert_user(user_to_create)
-        login_user(user_to_create)
-        flash(f"Account created successfully! You are now logged in as {user_to_create.username}", category='success')
-        return redirect(url_for('msr_page'))
-    if form.errors != {}: #If there are not errors from the validations
-        for err_msg in form.errors.values():
-            flash(f'There was an error with creating a user: {err_msg}', category='danger')
-
-    return render_template('register.html', form=form)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login_page():
-    form = LoginForm()
-    if form.validate_on_submit():
-        attempted_user = User.query.filter_by(username=form.username.data).first()
-        if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):
-            login_user(attempted_user)
-            flash(f'Success! You are logged in as: {attempted_user.username}', category='success')
-            return redirect(url_for('msr_page'))
-        else:
-            flash('Username and password are not match! Please try again', category='danger')
-
-    return render_template('login.html', form=form)
-
-@app.route('/logout')
-def logout_page():
-    logout_user()
-    flash("You have been logged out!", category='info')
-    return redirect(url_for("home_page"))
 
 def exist_repository_in_user(name, link, lista):
     checa = False
@@ -292,4 +245,4 @@ def repository_page():
         for err_msg in form.errors.values():
             flash(f'There was an error with new repository: {err_msg}', category='danger')
 
-    return render_template('repository.html', form=form)  
+    return render_template('repository/repository.html', form=form)  
