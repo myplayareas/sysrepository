@@ -1,3 +1,9 @@
+# SysRepository
+
+SysRepository is a web application that aid to analyze git repositories about commits, modified files, and other basic mining software repositories features.
+
+![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg) 
+
 ## Building the web application
 
 I chose to choose the Flask microframework because it is a simpler framework and requires a smaller set of dependencies and libraries to work with the http environment for request and response.
@@ -124,5 +130,3 @@ Run the application via CLI:
 ```bash
 $flask run
 ```
-
-More details... [wiki](https://github.com/myplayareas/sysrepository/wiki)
