@@ -117,6 +117,25 @@ These modules use [FlaskForm](https://flask-wtf.readthedocs.io/en/0.15.x/quickst
 
 Finally, the **handler_threads.py** script manages multiprocessing tasks.
 
+### Installing requiremnts 
+
+Virtual environment
+```bash
+$python3 -m venv venv
+```
+
+Activate virtual environment
+```bash
+$source venv/bin/activate
+```
+
+Install requirements
+```bash
+pip3 install -r requirements.txt
+```
+
+### Run application
+
 To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need arrows for the following environment variables:
 
 For the Posix environment:
