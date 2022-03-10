@@ -136,7 +136,7 @@ pip3 install -r requirements.txt
 
 ### Run application
 
-To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need arrows for the following environment variables:
+To run the application, it is necessary to install all the modules and extensions mentioned above. In addition, you need to set the following environment variables:
 
 For the Posix environment:
 ```bash
