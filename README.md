@@ -140,8 +140,8 @@ To run the application, it is necessary to install all the modules and extension
 
 For the Posix environment:
 ```bash
-export FLASH_APP=run.py
-export FLASH_ENV=development
+export FLASK_APP=run.py
+export FLASK_ENV=development
 ```
 More details at [CLI Flask](https://flask.palletsprojects.com/en/2.0.x/cli/)
 
